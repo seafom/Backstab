@@ -1,13 +1,11 @@
 using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using TMPro;
-
 
 public class Enemy : MonoBehaviour
 {
     public Transform other;
     public TextMeshProUGUI popupText;
+    private Vector3 dot;
 
     private bool isShowingText = false;
 
@@ -17,6 +15,7 @@ public class Enemy : MonoBehaviour
         if (popupText != null)
             popupText.enabled = false;
     }
+
     void Update()
     {
         if (other)
@@ -24,7 +23,13 @@ public class Enemy : MonoBehaviour
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 toOther = other.position - transform.position;
 
-            if (Vector3.Dot(forward, toOther) < 0)
+            // Normalize the 'toOther' vector
+            toOther.Normalize();
+
+            // Calculate the dot product
+            float dotProduct = Vector3.Dot(forward, toOther);
+
+            if (dotProduct < 0)
             {
                 if (!isShowingText)
                 {
@@ -33,7 +38,7 @@ public class Enemy : MonoBehaviour
                         popupText.enabled = true;
 
                     // Start a coroutine to hide the text after 2 seconds
-                    StartCoroutine(HideTextAfterDelay(2f));
+                    StartCoroutine(HideTextAfterDelay(1f));
 
                     print("The other transform is behind me!");
                 }
