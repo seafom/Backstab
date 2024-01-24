@@ -6,7 +6,7 @@ public class PlayerEnemyDirection : MonoBehaviour
 {
     private void OnDrawGizmosSelected()
     {
-        Debug.DrawRay(transform.position, transform.forward * 5, Color.green);
+        Debug.DrawRay(transform.position, transform.forward * 5, Color.red);
 
     }
 }
