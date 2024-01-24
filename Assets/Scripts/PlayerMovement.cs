@@ -1,29 +1,41 @@
+using TMPro;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float speed, rotationSpeed;
+    [SerializeField] private int maxHealth = 5;
+    private int currentHealth;
     private Vector3 input;
     private Rigidbody rb;
+
+    public TextMeshProUGUI healthText; // Reference to the UI Text element
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        currentHealth = maxHealth;
     }
 
     void Start()
     {
-
+        // Make sure to assign the Text component to healthText in the Unity Editor
+        if (healthText == null)
+        {
+            Debug.LogError("UI Text is not assigned to the healthText variable!");
+        }
+        else
+        {
+            UpdateHealthText();
+        }
     }
 
     void Update()
     {
 
         input = new Vector3(UnityEngine.Input.GetAxis("Horizontal"), 0f, UnityEngine.Input.GetAxis("Vertical"));
-
         input.Normalize();
 
-      
     }
 
     private void FixedUpdate()
@@ -42,7 +54,32 @@ public class PlayerMovement : MonoBehaviour
     {
         if (other.CompareTag("Enemy"))
         {
-           
+            TakeDamage();
+            UpdateHealthText(); // Update health text when the player takes damage
+        }
+    }
+
+    void TakeDamage()
+    {
+        currentHealth--;
+
+        // Check if the player is still alive
+        if (currentHealth <= 0)
+        {
+            
+            Destroy(gameObject);
+        }
+        else
+        {
+            Debug.Log("Player Health: " + currentHealth);
+        }
+    }
+
+    void UpdateHealthText()
+    {
+        if (healthText != null)
+        {
+            healthText.text = "Health: " + currentHealth.ToString();
         }
     }
 }

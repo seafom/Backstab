@@ -9,6 +9,9 @@ public class Enemy : MonoBehaviour
 
     private bool isShowingText = false;
 
+    public float rotationSpeed = 30f; 
+
+
     void Start()
     {
         TextMeshPro popupText = gameObject.GetComponent<TextMeshPro>();
@@ -18,16 +21,20 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
+        // Rotate the enemy around its own Y-axis
+        transform.Rotate(Vector3.up * Time.deltaTime * rotationSpeed);
+
         if (other)
         {
             Vector3 forward = transform.TransformDirection(Vector3.forward);
             Vector3 toOther = other.position - transform.position;
 
-            // Normalize the 'toOther' vector
+            // Normalize the toOther' vector
             toOther.Normalize();
 
-            // Calculate the dot product
             float dotProduct = Vector3.Dot(forward, toOther);
+
+
 
             if (dotProduct < 0)
             {
@@ -37,10 +44,10 @@ public class Enemy : MonoBehaviour
                     if (popupText != null)
                         popupText.enabled = true;
 
-                    // Start a coroutine to hide the text after 2 seconds
+                    // Hide text for 1 second
                     StartCoroutine(HideTextAfterDelay(1f));
 
-                    print("The other transform is behind me!");
+                    print("Player is behind me!");
                 }
             }
         }
@@ -58,4 +65,5 @@ public class Enemy : MonoBehaviour
 
         isShowingText = false;
     }
-}
+
+} 
